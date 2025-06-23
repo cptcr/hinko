@@ -1,0 +1,183 @@
+{
+  "commands": {
+    "help": {
+      "description": "Show help information about commands",
+      "embed": {
+        "title": "🚀 Pegasus Bot Commands",
+        "description": "Here are all available commands organized by category:",
+        "footer": "Use /help <command> for detailed information about a specific command"
+      },
+      "categories": {
+        "general": "🔧 General Commands",
+        "level": "📊 Level & XP Commands",
+        "admin": "⚙️ Administration Commands",
+        "moderation": "🔨 Moderation Commands"
+      },
+      "command_not_found": "❌ Command `{{command}}` not found.",
+      "command_detail": {
+        "title": "Command: {{command}}",
+        "description": "{{description}}",
+        "usage": "**Usage:** `{{usage}}`",
+        "category": "**Category:** {{category}}",
+        "permissions": "**Required Permissions:** {{permissions}}",
+        "admin_only": "**Admin Only:** Yes"
+      }
+    },
+    "level": {
+      "description": "Show your current level and XP progress",
+      "user_description": "Show level information for a specific user",
+      "embed": {
+        "title": "📊 Level Information",
+        "level": "Level {{level}}",
+        "xp": "{{current}}/{{total}} XP",
+        "next_level": "{{needed}} XP until level {{next}}",
+        "rank": "Rank: #{{rank}}",
+        "monthly_rank": "Monthly Rank: #{{monthlyRank}}",
+        "total_xp": "Total XP: {{totalXp}}",
+        "monthly_xp": "Monthly XP: {{monthlyXp}}"
+      },
+      "user_not_found": "❌ User not found in this server.",
+      "no_xp": "❌ No XP data found for this user."
+    },
+    "leaderboard": {
+      "description": "Show the server leaderboard",
+      "monthly_description": "Show monthly leaderboard (resets every 28 days)",
+      "embed": {
+        "title": "🏆 Server Leaderboard",
+        "monthly_title": "🗓️ Monthly Leaderboard",
+        "description": "Top users by XP in this server:",
+        "monthly_description": "Top users by monthly XP (28-day cycle):",
+        "entry": "{{rank}}. **{{username}}** - Level {{level}} ({{xp}} XP)"
+      },
+      "no_data": "❌ No leaderboard data available."
+    },
+    "customize": {
+      "description": "Customize your level card appearance",
+      "category_description": "Category to customize (theme, color, background)",
+      "value_description": "New value for the category",
+      "theme": {
+        "description": "Change your level card theme",
+        "success": "✅ Theme changed to **{{theme}}**",
+        "invalid": "❌ Invalid theme. Available themes: {{themes}}",
+        "available": "Available themes: {{themes}}"
+      },
+      "color": {
+        "description": "Change your level card color (hex color)",
+        "success": "✅ Color changed to **{{color}}**",
+        "invalid": "❌ Invalid hex color. Please use format: #RRGGBB"
+      },
+      "background": {
+        "description": "Change your level card background image",
+        "success": "✅ Background changed",
+        "reset": "✅ Background reset to default",
+        "invalid": "❌ Invalid image URL"
+      },
+      "categories": {
+        "theme": "Theme",
+        "color": "Color", 
+        "background": "Background"
+      }
+    },
+    "resetxp": {
+      "description": "Reset XP for users (Admin only)",
+      "user_description": "User to reset XP for",
+      "type_description": "Type of reset (monthly, total, or current)",
+      "guild_description": "Reset XP for entire server",
+      "confirm_description": "Confirm the reset action",
+      "success": {
+        "user_current": "✅ Reset current XP for {{user}}",
+        "user_total": "✅ Reset total XP for {{user}}",
+        "user_monthly": "✅ Reset monthly XP for {{user}}",
+        "guild_current": "✅ Reset current XP for {{count}} users",
+        "guild_total": "✅ Reset total XP for {{count}} users",
+        "guild_monthly": "✅ Reset monthly XP for {{count}} users"
+      },
+      "confirmation": {
+        "title": "⚠️ Confirm XP Reset",
+        "user": "Are you sure you want to reset {{type}} XP for {{user}}?",
+        "guild": "Are you sure you want to reset {{type}} XP for the entire server ({{count}} users)?",
+        "warning": "**This action cannot be undone!**"
+      },
+      "cancelled": "❌ XP reset cancelled.",
+      "error": "❌ Failed to reset XP. Please try again.",
+      "no_permission": "❌ You don't have permission to use this command."
+    },
+    "freezexp": {
+      "description": "Freeze/unfreeze users from gaining XP (Admin only)",
+      "user_description": "User to freeze/unfreeze",
+      "action_description": "Action to perform (freeze or unfreeze)",
+      "duration_description": "Duration to freeze (e.g., 1h, 30m, 2d)",
+      "reason_description": "Reason for freezing",
+      "success": {
+        "freeze": "❄️ Frozen {{user}} from gaining XP{{duration}}{{reason}}",
+        "freeze_permanent": " permanently",
+        "freeze_duration": " for {{duration}}",
+        "freeze_reason": "\n**Reason:** {{reason}}",
+        "unfreeze": "✅ Unfrozen {{user}} - they can now gain XP again"
+      },
+      "already_frozen": "❌ {{user}} is already frozen from gaining XP.",
+      "not_frozen": "❌ {{user}} is not currently frozen.",
+      "invalid_duration": "❌ Invalid duration format. Use: 1h, 30m, 2d, etc.",
+      "error": "❌ Failed to {{action}} user. Please try again.",
+      "no_permission": "❌ You don't have permission to use this command."
+    }
+  },
+  "events": {
+    "level_up": {
+      "title": "🎉 Level Up!",
+      "description": "{{user}} reached **Level {{level}}**!",
+      "roles_added": "\n🎁 **Roles Added:** {{roles}}"
+    },
+    "xp_gain": {
+      "gained": "+{{xp}} XP"
+    }
+  },
+  "errors": {
+    "generic": "❌ An error occurred. Please try again.",
+    "database": "❌ Database error. Please contact support.",
+    "permission": "❌ You don't have permission to use this command.",
+    "cooldown": "⏰ You're on cooldown. Try again in {{time}}.",
+    "user_not_found": "❌ User not found.",
+    "guild_only": "❌ This command can only be used in a server.",
+    "bot_missing_permissions": "❌ I don't have the required permissions to execute this command.",
+    "invalid_user": "❌ Please mention a valid user."
+  },
+  "success": {
+    "settings_updated": "✅ Settings updated successfully.",
+    "language_changed": "✅ Language changed to English.",
+    "action_completed": "✅ Action completed successfully."
+  },
+  "common": {
+    "yes": "Yes",
+    "no": "No",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "none": "None",
+    "unknown": "Unknown",
+    "level": "Level",
+    "xp": "XP",
+    "rank": "Rank",
+    "user": "User",
+    "server": "Server",
+    "time": {
+      "seconds": "{{count}} second",
+      "seconds_plural": "{{count}} seconds",
+      "minutes": "{{count}} minute", 
+      "minutes_plural": "{{count}} minutes",
+      "hours": "{{count}} hour",
+      "hours_plural": "{{count}} hours",
+      "days": "{{count}} day",
+      "days_plural": "{{count}} days"
+    }
+  },
+  "card_themes": {
+    "default": "Default",
+    "dark": "Dark",
+    "blue": "Blue",
+    "green": "Green",
+    "purple": "Purple",
+    "red": "Red",
+    "gold": "Gold"
+  }
+}

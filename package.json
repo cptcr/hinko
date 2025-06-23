@@ -1,0 +1,35 @@
+{
+  "name": "pegasus-discord-bot",
+  "version": "1.0.0",
+  "description": "Feature-rich Discord bot with XP system (Canvas-free)",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "nodemon --exec ts-node src/index.ts",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "deploy": "ts-node src/deploy-commands.ts",
+    "setup": "npm install && npm run db:generate"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "@discordjs/builders": "^1.7.0",
+    "@discordjs/rest": "^2.2.0",
+    "discord-api-types": "^0.37.61",
+    "prisma": "^5.7.1",
+    "@prisma/client": "^5.7.1",
+    "i18next": "^23.7.6",
+    "i18next-fs-backend": "^2.3.1",
+    "dotenv": "^16.3.1",
+    "node-cron": "^3.0.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "@types/node": "^20.10.4",
+    "@types/node-cron": "^3.0.11",
+    "ts-node": "^10.9.2",
+    "nodemon": "^3.0.2"
+  }
+}

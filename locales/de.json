@@ -1,0 +1,183 @@
+{
+  "commands": {
+    "help": {
+      "description": "Zeige Hilfeinformationen zu Befehlen",
+      "embed": {
+        "title": "🚀 Pegasus Bot Befehle",
+        "description": "Hier sind alle verfügbaren Befehle nach Kategorien sortiert:",
+        "footer": "Verwende /help <befehl> für detaillierte Informationen zu einem spezifischen Befehl"
+      },
+      "categories": {
+        "general": "🔧 Allgemeine Befehle",
+        "level": "📊 Level & XP Befehle",
+        "admin": "⚙️ Administrations Befehle",
+        "moderation": "🔨 Moderations Befehle"
+      },
+      "command_not_found": "❌ Befehl `{{command}}` nicht gefunden.",
+      "command_detail": {
+        "title": "Befehl: {{command}}",
+        "description": "{{description}}",
+        "usage": "**Verwendung:** `{{usage}}`",
+        "category": "**Kategorie:** {{category}}",
+        "permissions": "**Erforderliche Berechtigungen:** {{permissions}}",
+        "admin_only": "**Nur für Admins:** Ja"
+      }
+    },
+    "level": {
+      "description": "Zeige dein aktuelles Level und XP Fortschritt",
+      "user_description": "Zeige Level-Informationen für einen bestimmten Benutzer",
+      "embed": {
+        "title": "📊 Level Informationen",
+        "level": "Level {{level}}",
+        "xp": "{{current}}/{{total}} XP",
+        "next_level": "{{needed}} XP bis Level {{next}}",
+        "rank": "Rang: #{{rank}}",
+        "monthly_rank": "Monatsrang: #{{monthlyRank}}",
+        "total_xp": "Gesamt XP: {{totalXp}}",
+        "monthly_xp": "Monats XP: {{monthlyXp}}"
+      },
+      "user_not_found": "❌ Benutzer nicht auf diesem Server gefunden.",
+      "no_xp": "❌ Keine XP Daten für diesen Benutzer gefunden."
+    },
+    "leaderboard": {
+      "description": "Zeige die Server Rangliste",
+      "monthly_description": "Zeige monatliche Rangliste (wird alle 28 Tage zurückgesetzt)",
+      "embed": {
+        "title": "🏆 Server Rangliste",
+        "monthly_title": "🗓️ Monats Rangliste",
+        "description": "Top Benutzer nach XP auf diesem Server:",
+        "monthly_description": "Top Benutzer nach monatlichen XP (28-Tage Zyklus):",
+        "entry": "{{rank}}. **{{username}}** - Level {{level}} ({{xp}} XP)"
+      },
+      "no_data": "❌ Keine Ranglisten-Daten verfügbar."
+    },
+    "customize": {
+      "description": "Passe das Aussehen deiner Level-Karte an",
+      "category_description": "Kategorie zum Anpassen (theme, color, background)",
+      "value_description": "Neuer Wert für die Kategorie",
+      "theme": {
+        "description": "Ändere das Design deiner Level-Karte",
+        "success": "✅ Design zu **{{theme}}** geändert",
+        "invalid": "❌ Ungültiges Design. Verfügbare Designs: {{themes}}",
+        "available": "Verfügbare Designs: {{themes}}"
+      },
+      "color": {
+        "description": "Ändere die Farbe deiner Level-Karte (hex Farbe)",
+        "success": "✅ Farbe zu **{{color}}** geändert",
+        "invalid": "❌ Ungültige hex Farbe. Bitte verwende das Format: #RRGGBB"
+      },
+      "background": {
+        "description": "Ändere das Hintergrundbild deiner Level-Karte",
+        "success": "✅ Hintergrund geändert",
+        "reset": "✅ Hintergrund auf Standard zurückgesetzt",
+        "invalid": "❌ Ungültige Bild-URL"
+      },
+      "categories": {
+        "theme": "Design",
+        "color": "Farbe",
+        "background": "Hintergrund"
+      }
+    },
+    "resetxp": {
+      "description": "Setze XP für Benutzer zurück (Nur Admins)",
+      "user_description": "Benutzer für den die XP zurückgesetzt werden sollen",
+      "type_description": "Art des Zurücksetzens (monthly, total, oder current)",
+      "guild_description": "XP für den gesamten Server zurücksetzen",
+      "confirm_description": "Bestätige die Zurücksetzung",
+      "success": {
+        "user_current": "✅ Aktuelle XP für {{user}} zurückgesetzt",
+        "user_total": "✅ Gesamt XP für {{user}} zurückgesetzt",
+        "user_monthly": "✅ Monats XP für {{user}} zurückgesetzt",
+        "guild_current": "✅ Aktuelle XP für {{count}} Benutzer zurückgesetzt",
+        "guild_total": "✅ Gesamt XP für {{count}} Benutzer zurückgesetzt",
+        "guild_monthly": "✅ Monats XP für {{count}} Benutzer zurückgesetzt"
+      },
+      "confirmation": {
+        "title": "⚠️ XP Zurücksetzung bestätigen",
+        "user": "Bist du sicher, dass du {{type}} XP für {{user}} zurücksetzen möchtest?",
+        "guild": "Bist du sicher, dass du {{type}} XP für den gesamten Server ({{count}} Benutzer) zurücksetzen möchtest?",
+        "warning": "**Diese Aktion kann nicht rückgängig gemacht werden!**"
+      },
+      "cancelled": "❌ XP Zurücksetzung abgebrochen.",
+      "error": "❌ Fehler beim Zurücksetzen der XP. Bitte versuche es erneut.",
+      "no_permission": "❌ Du hast keine Berechtigung für diesen Befehl."
+    },
+    "freezexp": {
+      "description": "Friere/Entfriere Benutzer vom XP-Gewinn ein (Nur Admins)",
+      "user_description": "Benutzer zum Einfrieren/Entfrieren",
+      "action_description": "Auszuführende Aktion (freeze oder unfreeze)",
+      "duration_description": "Dauer zum Einfrieren (z.B. 1h, 30m, 2d)",
+      "reason_description": "Grund für das Einfrieren",
+      "success": {
+        "freeze": "❄️ {{user}} vom XP-Gewinn eingefroren{{duration}}{{reason}}",
+        "freeze_permanent": " permanent",
+        "freeze_duration": " für {{duration}}",
+        "freeze_reason": "\n**Grund:** {{reason}}",
+        "unfreeze": "✅ {{user}} entfroren - kann jetzt wieder XP sammeln"
+      },
+      "already_frozen": "❌ {{user}} ist bereits vom XP-Gewinn eingefroren.",
+      "not_frozen": "❌ {{user}} ist derzeit nicht eingefroren.",
+      "invalid_duration": "❌ Ungültiges Dauern-Format. Verwende: 1h, 30m, 2d, etc.",
+      "error": "❌ Fehler beim {{action}} des Benutzers. Bitte versuche es erneut.",
+      "no_permission": "❌ Du hast keine Berechtigung für diesen Befehl."
+    }
+  },
+  "events": {
+    "level_up": {
+      "title": "🎉 Level aufgestiegen!",
+      "description": "{{user}} hat **Level {{level}}** erreicht!",
+      "roles_added": "\n🎁 **Rollen hinzugefügt:** {{roles}}"
+    },
+    "xp_gain": {
+      "gained": "+{{xp}} XP"
+    }
+  },
+  "errors": {
+    "generic": "❌ Ein Fehler ist aufgetreten. Bitte versuche es erneut.",
+    "database": "❌ Datenbankfehler. Bitte kontaktiere den Support.",
+    "permission": "❌ Du hast keine Berechtigung für diesen Befehl.",
+    "cooldown": "⏰ Du bist noch im Cooldown. Versuche es in {{time}} erneut.",
+    "user_not_found": "❌ Benutzer nicht gefunden.",
+    "guild_only": "❌ Dieser Befehl kann nur auf einem Server verwendet werden.",
+    "bot_missing_permissions": "❌ Ich habe nicht die erforderlichen Berechtigungen für diesen Befehl.",
+    "invalid_user": "❌ Bitte erwähne einen gültigen Benutzer."
+  },
+  "success": {
+    "settings_updated": "✅ Einstellungen erfolgreich aktualisiert.",
+    "language_changed": "✅ Sprache zu Deutsch geändert.",
+    "action_completed": "✅ Aktion erfolgreich abgeschlossen."
+  },
+  "common": {
+    "yes": "Ja",
+    "no": "Nein",
+    "confirm": "Bestätigen",
+    "cancel": "Abbrechen",
+    "loading": "Lädt...",
+    "none": "Keine",
+    "unknown": "Unbekannt",
+    "level": "Level",
+    "xp": "XP",
+    "rank": "Rang",
+    "user": "Benutzer",
+    "server": "Server",
+    "time": {
+      "seconds": "{{count}} Sekunde",
+      "seconds_plural": "{{count}} Sekunden",
+      "minutes": "{{count}} Minute",
+      "minutes_plural": "{{count}} Minuten",
+      "hours": "{{count}} Stunde",
+      "hours_plural": "{{count}} Stunden",
+      "days": "{{count}} Tag",
+      "days_plural": "{{count}} Tage"
+    }
+  },
+  "card_themes": {
+    "default": "Standard",
+    "dark": "Dunkel",
+    "blue": "Blau",
+    "green": "Grün",
+    "purple": "Lila",
+    "red": "Rot",
+    "gold": "Gold"
+  }
+}
