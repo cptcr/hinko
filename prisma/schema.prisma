@@ -18,12 +18,15 @@ model Guild {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  users        User[]
-  levelRoles   LevelRole[]
+  users         User[]
+  levelRoles    LevelRole[]
   monthlyResets MonthlyReset[]
-  warns        Warn[]
-  modActions   ModAction[]
-  quarantines  Quarantine[]
+  warns         Warn[]
+  modActions    ModAction[]
+  quarantines   Quarantine[]
+  ticketSystems TicketSystem[]
+  tickets       Ticket[]
+  polls         Poll[]
 }
 
 model User {
@@ -51,6 +54,9 @@ model User {
   warns      Warn[]
   modActions ModAction[]
   quarantine Quarantine?
+  tickets    Ticket[]
+  ticketMessages TicketMessage[]
+  pollVotes  PollVote[]
 
   @@unique([id, guildId], name: "id_guildId")
   @@index([guildId])
@@ -168,4 +174,124 @@ model Quarantine {
   
   @@unique([userId, guildId])
   @@index([guildId, active])
+}
+
+model TicketSystem {
+  id               String   @id @default(cuid())
+  guildId          String
+  name             String
+  categoryId       String
+  supportRoleIds   String[]
+  welcomeMessage   String   @default("Welcome to your ticket! A staff member will be with you shortly.")
+  maxTicketsPerUser Int     @default(3)
+  transcriptChannel String?
+  panelChannelId   String?
+  panelMessageId   String?
+  panelTitle       String   @default("Support Tickets")
+  panelDescription String   @default("Click the button below to create a ticket")
+  panelButtonLabel String   @default("Create Ticket")
+  panelButtonEmoji String   @default("📩")
+  enabled          Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  guild    Guild     @relation(fields: [guildId], references: [id])
+  tickets  Ticket[]
+
+  @@index([guildId])
+}
+
+model Ticket {
+  id         Int      @id @default(autoincrement())
+  guildId    String
+  systemId   String
+  userId     String
+  channelId  String
+  number     Int
+  status     String   @default("open")
+  claimedBy  String?
+  closedBy   String?
+  closedAt   DateTime?
+  locked     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  guild      Guild           @relation(fields: [guildId], references: [id])
+  system     TicketSystem    @relation(fields: [systemId], references: [id])
+  user       User            @relation(fields: [userId, guildId], references: [id, guildId])
+  messages   TicketMessage[]
+
+  @@unique([guildId, number])
+  @@index([userId, guildId])
+  @@index([status])
+  @@index([systemId])
+}
+
+model TicketMessage {
+  id        String   @id @default(cuid())
+  ticketId  Int
+  userId    String
+  guildId   String
+  content   String
+  createdAt DateTime @default(now())
+
+  ticket    Ticket   @relation(fields: [ticketId], references: [id])
+  user      User     @relation(fields: [userId, guildId], references: [id, guildId])
+
+  @@index([ticketId])
+}
+
+model Poll {
+  id          String   @id @default(cuid())
+  guildId     String
+  messageId   String   @unique
+  channelId   String
+  creatorId   String
+  title       String
+  description String?
+  imageUrl    String?
+  endTime     DateTime?
+  maxVotes    Int      @default(1)
+  allowChange Boolean  @default(true)
+  showResults Boolean  @default(true)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  guild    Guild        @relation(fields: [guildId], references: [id])
+  options  PollOption[]
+  votes    PollVote[]
+
+  @@index([guildId])
+  @@index([active])
+}
+
+model PollOption {
+  id       String @id @default(cuid())
+  pollId   String
+  optionId Int
+  label    String
+  emoji    String?
+
+  poll     Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  votes    PollVote[]
+
+  @@unique([pollId, optionId])
+  @@index([pollId])
+}
+
+model PollVote {
+  id       String   @id @default(cuid())
+  pollId   String
+  optionId String
+  userId   String
+  guildId  String
+  votedAt  DateTime @default(now())
+
+  poll     Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  option   PollOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  user     User       @relation(fields: [userId, guildId], references: [id, guildId])
+
+  @@unique([pollId, userId])
+  @@index([pollId])
+  @@index([userId, guildId])
 }

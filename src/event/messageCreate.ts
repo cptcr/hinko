@@ -1,7 +1,7 @@
 import { Events, Message, EmbedBuilder } from 'discord.js';
 import { XPSystem } from '../utils/xpSystem';
 import { XPGainReason } from '../types';
-import { ensureGuild, ensureUser } from '../utils/database';
+import { ensureGuild, ensureUser, prisma } from '../utils/database';
 import { getUserLanguage, t } from '../utils/i18n';
 
 export const name = Events.MessageCreate;
@@ -9,6 +9,9 @@ export const name = Events.MessageCreate;
 export async function execute(message: Message) {
   // Ignore bots and DMs
   if (message.author.bot || !message.guild) return;
+
+  // Check if this is a ticket channel and log the message
+  await logTicketMessage(message);
 
   // Ignore empty messages or commands
   if (!message.content || message.content.startsWith('/')) return;
@@ -83,5 +86,34 @@ async function handleLevelUp(message: Message, newLevel: number) {
 
   } catch (error) {
     console.error('Error handling level up:', error);
+  }
+}
+
+async function logTicketMessage(message: Message) {
+  if (!message.guild || !message.channel) return;
+
+  try {
+    // Check if this channel is a ticket
+    const ticket = await prisma.ticket.findFirst({
+      where: {
+        channelId: message.channel.id,
+        guildId: message.guild.id,
+        status: 'open'
+      }
+    });
+
+    if (!ticket) return;
+
+    // Log the message
+    await prisma.ticketMessage.create({
+      data: {
+        ticketId: ticket.id,
+        userId: message.author.id,
+        guildId: message.guild.id,
+        content: message.content.substring(0, 1000) // Limit to 1000 chars
+      }
+    });
+  } catch (error) {
+    console.error('Error logging ticket message:', error);
   }
 }

@@ -3,10 +3,49 @@ import { ExtendedClient } from '../types';
 import { hasPermission, isAdminCommand } from '../utils/commandLoader';
 import { ensureGuild } from '../utils/database';
 import { getUserLanguage, t } from '../utils/i18n';
+import { handleTicketButton, handleTicketModal } from '../interactions/ticketButtons';
+import { handlePollButton } from '../interactions/pollButtons';
 
 export const name = Events.InteractionCreate;
 
 export async function execute(interaction: Interaction) {
+  if (interaction.isButton()) {
+    const customId = interaction.customId;
+    
+    if (customId.startsWith('ticket_')) {
+      await handleTicketButton(interaction);
+      return;
+    }
+    
+    if (customId.startsWith('poll_')) {
+      await handlePollButton(interaction);
+      return;
+    }
+  }
+  
+  if (interaction.isModalSubmit()) {
+    const customId = interaction.customId;
+    
+    if (customId.startsWith('ticket_')) {
+      await handleTicketModal(interaction);
+      return;
+    }
+  }
+  
+  if (interaction.isAutocomplete()) {
+    const client = interaction.client as ExtendedClient;
+    const command = client.commands.get(interaction.commandName);
+    
+    if (command && 'autocomplete' in command && typeof command.autocomplete === 'function') {
+      try {
+        await command.autocomplete(interaction);
+      } catch (error) {
+        console.error(`Error in autocomplete for ${interaction.commandName}:`, error);
+      }
+    }
+    return;
+  }
+
   if (!interaction.isChatInputCommand() || !interaction.guild) return;
 
   const client = interaction.client as ExtendedClient;
