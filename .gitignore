@@ -106,3 +106,9 @@ bun.lockb
 
 # Customs
 feat.md
+.env.local
+.env.production
+.env.development
+.env.staging
+.env.test.local
+.env 
