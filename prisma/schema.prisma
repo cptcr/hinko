@@ -1,0 +1,171 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Guild {
+  id         String   @id
+  language   String   @default("en")
+  xpEnabled  Boolean  @default(true)
+  xpMin      Int      @default(15)
+  xpMax      Int      @default(25)
+  xpCooldown Int      @default(60000)
+  xpRate     Float    @default(1.0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  users        User[]
+  levelRoles   LevelRole[]
+  monthlyResets MonthlyReset[]
+  warns        Warn[]
+  modActions   ModAction[]
+  quarantines  Quarantine[]
+}
+
+model User {
+  id         String   @id
+  guildId    String
+  username   String
+  xp         Int      @default(0)
+  level      Int      @default(0)
+  totalXp    Int      @default(0)
+  monthlyXp  Int      @default(0)
+  lastMessage DateTime?
+  lastReset  DateTime @default(now())
+  language   String?
+  cardTheme  String   @default("default")
+  cardColor  String   @default("#7289da")
+  cardBg     String?
+  frozen     Boolean  @default(false)
+  frozenBy   String?
+  frozenUntil DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  guild      Guild    @relation(fields: [guildId], references: [id])
+  xpHistory  XPHistory[]
+  warns      Warn[]
+  modActions ModAction[]
+  quarantine Quarantine?
+
+  @@unique([id, guildId], name: "id_guildId")
+  @@index([guildId])
+  @@index([xp])
+  @@index([monthlyXp])
+}
+
+model LevelRole {
+  id       Int      @id @default(autoincrement())
+  guildId  String
+  level    Int
+  roleId   String
+  createdAt DateTime @default(now())
+
+  guild    Guild    @relation(fields: [guildId], references: [id])
+
+  @@unique([guildId, level])
+}
+
+model XPHistory {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  guildId   String
+  xpGained  Int
+  reason    String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId, guildId], references: [id, guildId])
+
+  @@index([userId, guildId])
+  @@index([createdAt])
+}
+
+model MonthlyReset {
+  id        Int      @id @default(autoincrement())
+  guildId   String
+  userCount Int
+  resetDate DateTime
+
+  guild     Guild    @relation(fields: [guildId], references: [id])
+
+  @@index([guildId])
+  @@index([resetDate])
+}
+
+model Warn {
+  id         Int      @id @default(autoincrement())
+  userId     String
+  guildId    String
+  moderatorId String
+  reason     String
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime?
+  active     Boolean  @default(true)
+  deletedAt  DateTime?
+  deletedBy  String?
+  
+  user       User     @relation(fields: [userId, guildId], references: [id, guildId])
+  guild      Guild    @relation(fields: [guildId], references: [id])
+  history    WarnHistory[]
+  
+  @@index([userId, guildId])
+  @@index([guildId, active])
+  @@index([expiresAt])
+}
+
+model WarnHistory {
+  id         Int      @id @default(autoincrement())
+  warnId     Int
+  moderatorId String
+  action     String
+  oldReason  String?
+  newReason  String?
+  oldExpiry  DateTime?
+  newExpiry  DateTime?
+  createdAt  DateTime @default(now())
+  
+  warn       Warn     @relation(fields: [warnId], references: [id])
+  
+  @@index([warnId])
+}
+
+model ModAction {
+  id         Int      @id @default(autoincrement())
+  userId     String
+  guildId    String
+  moderatorId String
+  action     String
+  reason     String?
+  duration   Int?
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime?
+  active     Boolean  @default(true)
+  
+  user       User     @relation(fields: [userId, guildId], references: [id, guildId])
+  guild      Guild    @relation(fields: [guildId], references: [id])
+  
+  @@index([userId, guildId])
+  @@index([guildId, action])
+  @@index([expiresAt])
+}
+
+model Quarantine {
+  id         Int      @id @default(autoincrement())
+  userId     String
+  guildId    String
+  moderatorId String
+  reason     String
+  roleIds    String[]
+  createdAt  DateTime @default(now())
+  active     Boolean  @default(true)
+  
+  user       User     @relation(fields: [userId, guildId], references: [id, guildId])
+  guild      Guild    @relation(fields: [guildId], references: [id])
+  
+  @@unique([userId, guildId])
+  @@index([guildId, active])
+}
