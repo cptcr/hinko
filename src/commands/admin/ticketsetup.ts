@@ -7,7 +7,8 @@ import {
   ButtonBuilder,
   ButtonStyle,
   ActionRowBuilder,
-  ComponentType
+  ComponentType,
+  TextChannel
 } from 'discord.js';
 import { prisma } from '../../utils/database';
 import { getUserLanguage, t } from '../../utils/i18n';

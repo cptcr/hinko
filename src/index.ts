@@ -6,6 +6,7 @@ import { initializeDatabase } from './utils/database';
 import { initializeI18n } from './utils/i18n';
 import { startMonthlyResetCron } from './utils/cronJobs';
 import { startModerationCron } from './utils/moderationSystem';
+import { startBirthdayCron } from './utils/birthdaySystem';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -42,6 +43,7 @@ async function startBot() {
     console.log('⏰ Starting scheduled tasks...');
     startMonthlyResetCron();
     startModerationCron();
+    startBirthdayCron(client);
     
     console.log('🔐 Logging in to Discord...');
     await client.login(process.env.DISCORD_TOKEN);

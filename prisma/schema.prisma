@@ -17,7 +17,13 @@ model Guild {
   xpRate     Float    @default(1.0)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-
+  communitySettings CommunitySettings?
+  confessions      Confession[]
+  suggestions      Suggestion[]
+  reports          Report[]
+  compliments      Compliment[]
+  quotes           Quote[]
+  birthdays        Birthday[]
   users         User[]
   levelRoles    LevelRole[]
   monthlyResets MonthlyReset[]
@@ -27,6 +33,9 @@ model Guild {
   ticketSystems TicketSystem[]
   tickets       Ticket[]
   polls         Poll[]
+  socialInteractions SocialInteraction[]
+  gameStats         GameStats[]
+  socialReactions SocialReaction[]
 }
 
 model User {
@@ -294,4 +303,211 @@ model PollVote {
   @@unique([pollId, userId])
   @@index([pollId])
   @@index([userId, guildId])
+}
+
+model CommunitySettings {
+  id                   String   @id @default(cuid())
+  guildId              String   @unique
+  confessionChannelId  String?
+  confessionEnabled    Boolean  @default(false)
+  suggestionChannelId  String?
+  suggestionEnabled    Boolean  @default(false)
+  reportChannelId      String?
+  reportEnabled        Boolean  @default(false)
+  birthdayChannelId    String?
+  birthdayEnabled      Boolean  @default(false)
+  complimentChannelId  String?
+  complimentEnabled    Boolean  @default(false)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  guild               Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  @@index([guildId])
+}
+
+model Confession {
+  id                 Int                   @id @default(autoincrement())
+  guildId           String
+  userId            String
+  number            Int
+  content           String
+  createdAt         DateTime              @default(now())
+
+  guild             Guild                 @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  reactions         ConfessionReaction[]
+
+  @@unique([guildId, number])
+  @@index([guildId])
+  @@index([userId])
+}
+
+model ConfessionReaction {
+  id                String   @id @default(cuid())
+  confessionNumber  Int
+  userId            String
+  guildId           String
+  emoji             String
+  createdAt         DateTime @default(now())
+
+  confession        Confession @relation(fields: [confessionNumber, guildId], references: [number, guildId], onDelete: Cascade)
+
+  @@unique([confessionNumber, userId, guildId])
+  @@index([confessionNumber, guildId])
+}
+
+model Suggestion {
+  id            String           @id @default(cuid())
+  guildId       String
+  userId        String
+  messageId     String?
+  number        Int
+  title         String
+  description   String
+  category      String           @default("general")
+  status        String           @default("pending")
+  adminComment  String?
+  reviewedBy    String?
+  reviewedAt    DateTime?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  guild         Guild            @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  votes         SuggestionVote[]
+
+  @@unique([guildId, number])
+  @@index([guildId])
+  @@index([userId])
+  @@index([status])
+}
+
+model SuggestionVote {
+  id           String     @id @default(cuid())
+  suggestionId String
+  userId       String
+  voteType     String
+  createdAt    DateTime   @default(now())
+
+  suggestion   Suggestion @relation(fields: [suggestionId], references: [id], onDelete: Cascade)
+
+  @@unique([suggestionId, userId])
+  @@index([suggestionId])
+}
+
+model Report {
+  id             Int       @id @default(autoincrement())
+  guildId        String
+  reporterId     String
+  reportedUserId String?
+  number         Int
+  reason         String
+  evidence       String?
+  status         String    @default("open")
+  handledBy      String?
+  handledAt      DateTime?
+  createdAt      DateTime  @default(now())
+
+  guild          Guild     @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  @@unique([guildId, number])
+  @@index([guildId])
+  @@index([reporterId])
+  @@index([status])
+}
+
+model Compliment {
+  id         String   @id @default(cuid())
+  guildId    String
+  senderId   String
+  receiverId String
+  message    String
+  anonymous  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  guild      Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  @@index([guildId])
+  @@index([receiverId])
+  @@index([senderId])
+}
+
+model Quote {
+  id         String   @id @default(cuid())
+  guildId    String
+  addedBy    String
+  text       String
+  authorId   String?
+  authorName String
+  createdAt  DateTime @default(now())
+
+  guild      Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  @@index([guildId])
+  @@index([addedBy])
+}
+
+model Birthday {
+  id       String   @id @default(cuid())
+  userId   String
+  guildId  String
+  date     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  guild    Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, guildId])
+  @@index([guildId])
+  @@index([date])
+}
+
+model SocialInteraction {
+  id         String   @id @default(cuid())
+  guildId    String
+  senderId   String
+  receiverId String?
+  action     String
+  message    String?
+  createdAt  DateTime @default(now())
+
+  guild      Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  @@index([guildId])
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([action])
+}
+
+model GameStats {
+  id            String   @id @default(cuid())
+  userId        String
+  guildId       String
+  game          String
+  gamesPlayed   Int      @default(0)
+  gamesWon      Int      @default(0)
+  totalWinnings Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  guild         Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, guildId, game])
+  @@index([guildId])
+  @@index([userId])
+  @@index([game])
+}
+
+model SocialReaction {
+  id            String   @id @default(cuid())
+  interactionId String
+  userId        String
+  guildId       String
+  emoji         String
+  createdAt     DateTime @default(now())
+
+  guild         Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  @@unique([interactionId, userId])
+  @@index([guildId])
+  @@index([interactionId])
 }

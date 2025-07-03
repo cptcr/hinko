@@ -189,7 +189,7 @@ async function handleTicketPanel(interaction: ButtonInteraction, action: string)
   if (!ticket) return;
 
   const member = interaction.member;
-  if (typeof member.permissions === 'string') return;
+  if (!member || typeof member.permissions === 'string') return;
 
   const memberRoles = member.roles;
   const hasRole = typeof memberRoles !== 'string' && 'cache' in memberRoles && 

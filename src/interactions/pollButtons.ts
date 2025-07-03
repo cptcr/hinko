@@ -260,8 +260,8 @@ async function handlePollParticipants(interaction: ButtonInteraction) {
     option: any;
     voters: string[];
   }
-
-  const votesByOption = votes.reduce<Record<number, VoteGroup>>((acc, vote) => {
+  
+  const votesByOption = votes.reduce((acc: any, vote: any) => {
     const key = vote.option.optionId;
     if (!acc[key]) {
       acc[key] = {
